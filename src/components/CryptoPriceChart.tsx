@@ -22,6 +22,7 @@ import {
   timeframeSchema,
 } from "@/lib/crypto"
 import { getKlines } from "@/server/crypto"
+import { cn } from "@/lib/utils"
 
 const chartConfig = {
   close: {
@@ -104,7 +105,7 @@ export default function CryptoPriceChart() {
         >
           <TabsList>
             {TIMEFRAMES.map((item) => (
-              <TabsTrigger key={item.value} value={item.value}>
+              <TabsTrigger key={item.value} value={item.value} className="hover:cursor-pointer">
                 {item.label}
               </TabsTrigger>
             ))}
@@ -119,6 +120,11 @@ export default function CryptoPriceChart() {
             type="button"
             size="sm"
             variant={symbol === item.symbol ? "default" : "outline"}
+            className={cn(
+              "cursor-pointer",
+              symbol !== item.symbol &&
+                "text-[var(--sea-ink-soft)] hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)] dark:hover:bg-[var(--link-bg-hover)] hover:scale-104 transition-all duration-200",
+            )}
             onClick={() => setSymbol(item.symbol)}
           >
             {item.label}
