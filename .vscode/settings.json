@@ -7,5 +7,19 @@
   },
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true
+  },
+  "biome.lsp.bin": "./node_modules/@biomejs/biome/bin/biome",
+  "biome.inlineConfig": {
+    "css": {
+      "parser": {
+        "tailwindDirectives": true
+      }
+    }
+  },
+  "[css]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[tailwindcss]": {
+    "editor.defaultFormatter": "biomejs.biome"
   }
 }

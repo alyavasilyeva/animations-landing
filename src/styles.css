@@ -1,13 +1,63 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @theme {
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 :root {
+  --radius: 0.75rem;
+  --background: #f3faf5;
+  --foreground: #173a40;
+  --card: rgba(255, 255, 255, 0.9);
+  --card-foreground: #173a40;
+  --popover: rgba(255, 255, 255, 0.95);
+  --popover-foreground: #173a40;
+  --primary: #328f97;
+  --primary-foreground: #f3faf5;
+  --secondary: #e7f0e8;
+  --secondary-foreground: #173a40;
+  --muted: #e7f0e8;
+  --muted-foreground: #416166;
+  --accent: rgba(79, 184, 178, 0.16);
+  --accent-foreground: #173a40;
+  --destructive: #c44747;
+  --border: rgba(23, 58, 64, 0.14);
+  --input: rgba(23, 58, 64, 0.14);
+  --ring: #4fb8b2;
+  --chart-1: #4fb8b2;
+  --chart-2: #2f6a4a;
+  --chart-3: #328f97;
+  --chart-4: #7ed3bf;
+  --chart-5: #173a40;
   --sea-ink: #173a40;
   --sea-ink-soft: #416166;
   --lagoon: #4fb8b2;
@@ -29,7 +79,31 @@
   --hero-b: rgba(47, 106, 74, 0.2);
 }
 
-:root[data-theme="dark"] {
+:root[data-theme="dark"],
+.dark {
+  --background: #0a1418;
+  --foreground: #d7ece8;
+  --card: rgba(15, 27, 31, 0.92);
+  --card-foreground: #d7ece8;
+  --popover: rgba(15, 27, 31, 0.95);
+  --popover-foreground: #d7ece8;
+  --primary: #60d7cf;
+  --primary-foreground: #0a1418;
+  --secondary: #101d22;
+  --secondary-foreground: #d7ece8;
+  --muted: #101d22;
+  --muted-foreground: #afcdc8;
+  --accent: rgba(96, 215, 207, 0.14);
+  --accent-foreground: #d7ece8;
+  --destructive: #e57373;
+  --border: rgba(141, 229, 219, 0.18);
+  --input: rgba(141, 229, 219, 0.18);
+  --ring: #60d7cf;
+  --chart-1: #60d7cf;
+  --chart-2: #6ec89a;
+  --chart-3: #8de5db;
+  --chart-4: #b8efe5;
+  --chart-5: #d7ece8;
   --sea-ink: #d7ece8;
   --sea-ink-soft: #afcdc8;
   --lagoon: #60d7cf;
@@ -53,6 +127,29 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    --background: #0a1418;
+    --foreground: #d7ece8;
+    --card: rgba(15, 27, 31, 0.92);
+    --card-foreground: #d7ece8;
+    --popover: rgba(15, 27, 31, 0.95);
+    --popover-foreground: #d7ece8;
+    --primary: #60d7cf;
+    --primary-foreground: #0a1418;
+    --secondary: #101d22;
+    --secondary-foreground: #d7ece8;
+    --muted: #101d22;
+    --muted-foreground: #afcdc8;
+    --accent: rgba(96, 215, 207, 0.14);
+    --accent-foreground: #d7ece8;
+    --destructive: #e57373;
+    --border: rgba(141, 229, 219, 0.18);
+    --input: rgba(141, 229, 219, 0.18);
+    --ring: #60d7cf;
+    --chart-1: #60d7cf;
+    --chart-2: #6ec89a;
+    --chart-3: #8de5db;
+    --chart-4: #b8efe5;
+    --chart-5: #d7ece8;
     --sea-ink: #d7ece8;
     --sea-ink-soft: #afcdc8;
     --lagoon: #60d7cf;
@@ -93,8 +190,17 @@ body {
   background:
     radial-gradient(1100px 620px at -8% -10%, var(--hero-a), transparent 58%),
     radial-gradient(1050px 620px at 112% -12%, var(--hero-b), transparent 62%),
-    radial-gradient(720px 380px at 50% 115%, rgba(79, 184, 178, 0.1), transparent 68%),
-    linear-gradient(180deg, color-mix(in oklab, var(--sand) 68%, white) 0%, var(--foam) 44%, var(--bg-base) 100%);
+    radial-gradient(
+      720px 380px at 50% 115%,
+      rgba(79, 184, 178, 0.1),
+      transparent 68%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--sand) 68%, white) 0%,
+      var(--foam) 44%,
+      var(--bg-base) 100%
+    );
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -108,7 +214,11 @@ body::before {
   z-index: -1;
   opacity: 0.28;
   background:
-    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.8), transparent 34%),
+    radial-gradient(
+      circle at 20% 15%,
+      rgba(255, 255, 255, 0.8),
+      transparent 34%
+    ),
     radial-gradient(circle at 78% 26%, rgba(79, 184, 178, 0.2), transparent 42%),
     radial-gradient(circle at 42% 82%, rgba(47, 106, 74, 0.14), transparent 36%);
 }
@@ -175,7 +285,11 @@ pre code {
 }
 
 .feature-card {
-  background: linear-gradient(165deg, color-mix(in oklab, var(--surface-strong) 93%, white 7%), var(--surface));
+  background: linear-gradient(
+    165deg,
+    color-mix(in oklab, var(--surface-strong) 93%, white 7%),
+    var(--surface)
+  );
   box-shadow:
     0 1px 0 var(--inset-glint) inset,
     0 18px 34px rgba(30, 90, 72, 0.1),
@@ -255,7 +369,10 @@ pre code {
   background: color-mix(in oklab, var(--surface-strong) 88%, white 12%);
   color: var(--sea-ink);
   outline: none;
-  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
 }
 
 .demo-input,
@@ -393,7 +510,10 @@ pre code {
 button,
 .island-shell,
 a {
-  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease,
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
     transform 180ms ease;
 }
 
@@ -461,4 +581,3 @@ a {
     transform: translateY(0);
   }
 }
-
