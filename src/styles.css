@@ -743,6 +743,14 @@ a {
   }
 }
 
+/* Vaul does not handle reduced motion itself; snap the drawer open/closed */
+@media (prefers-reduced-motion: reduce) {
+  [data-vaul-drawer],
+  [data-vaul-overlay] {
+    transition: none;
+  }
+}
+
 .hero-glow-primary {
   background: radial-gradient(circle, var(--glow-primary), transparent 66%);
 }
