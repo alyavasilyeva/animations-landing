@@ -1,7 +1,13 @@
-import { ChevronDown, Menu, Wallet, X } from "lucide-react"
+import { ChevronLeft, ChevronRight, Menu, Wallet, X } from "lucide-react"
+import {
+  AnimatePresence,
+  motion,
+  useIsPresent,
+  useReducedMotion,
+} from "motion/react"
 import { useEffect, useState } from "react"
+import useMeasure from "react-use-measure"
 import { Drawer } from "vaul"
-import { cn } from "@/lib/utils"
 import ThemeToggle from "./ThemeToggle"
 import { Button } from "./ui/button"
 import {
@@ -18,109 +24,212 @@ import {
 
 const NAV_ITEMS = [
   {
-    label: "Features",
+    label: "Menu",
     items: [
-      { label: "Send & receive" },
-      { label: "Swap tokens" },
-      { label: "Portfolio tracker" },
       {
-        label: "Security",
+        label: "Features",
+        isChild: true,
         items: [
-          { label: "Recovery phrase" },
-          { label: "Biometrics" },
-          { label: "Hardware keys" },
+          { label: "Send & receive", isChild: true },
+          { label: "Swap tokens", isChild: true },
+          { label: "Portfolio tracker", isChild: true },
+          {
+            label: "Security",
+            isChild: true,
+            items: [
+              { label: "Recovery phrase", isChild: true },
+              { label: "Biometrics", isChild: true },
+              { label: "Hardware keys", isChild: true },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Learn",
+        isChild: true,
+        items: [
+          { label: "Getting started", isChild: true },
+          { label: "Guides", isChild: true },
+          {
+            label: "Resources",
+            items: [
+              { label: "Docs", isChild: true },
+              { label: "Blog", isChild: true },
+              { label: "FAQ", isChild: true },
+            ],
+            isChild: true,
+          },
         ],
       },
     ],
+    isChild: false,
   },
-  {
-    label: "Learn",
-    items: [
-      { label: "Getting started" },
-      { label: "Guides" },
-      {
-        label: "Resources",
-        items: [{ label: "Docs" }, { label: "Blog" }, { label: "FAQ" }],
-      },
-    ],
-  },
-] as const
+]
 
-type NavLeaf = { label: string; items?: undefined }
-type NavBranch = { label: string; items: readonly NavLeaf[] }
-type NavEntry = NavLeaf | NavBranch
+type NavLeaf = { label: string; items?: NavLeaf[]; isChild: boolean }
 
-function isNavBranch(entry: NavEntry): entry is NavBranch {
-  return "items" in entry && entry.items !== undefined
-}
-
-function MobileNavSection({
-  label,
-  items,
+function MobileNavPanelContent({
+  navLeaf,
+  onBack,
+  onPush,
 }: {
-  label: string
-  items: readonly NavEntry[]
+  navLeaf: NavLeaf
+  onBack: () => void
+  onPush: (entry: NavLeaf) => void
 }) {
-  const [open, setOpen] = useState(false)
+  const isPresent = useIsPresent()
 
   return (
-    <div className="border-b border-border/40 last:border-b-0">
-      <button
-        type="button"
-        className="flex w-full items-center justify-between py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 ease"
-        aria-expanded={open}
-        onClick={() => setOpen((value) => !value)}
-      >
-        {label}
-        <ChevronDown
-          className={cn(
-            "size-4 transition-transform duration-200 ease-out",
-            open && "rotate-180",
-          )}
-        />
-      </button>
-      <div
-        className={cn(
-          "grid transition-[grid-template-rows] duration-200 ease-out",
-          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+    <div
+      className="w-full"
+      style={{ pointerEvents: isPresent ? "auto" : "none" }}
+    >
+      {navLeaf.isChild ? (
+        <button
+          type="button"
+          onClick={onBack}
+          className="mb-1 flex w-full items-center gap-1 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 ease"
+        >
+          <ChevronLeft className="size-4" />
+          <span className="font-medium text-foreground">{navLeaf.label}</span>
+        </button>
+      ) : null}
+
+      <ul className="flex max-h-[min(50vh,24rem)] flex-col overflow-y-auto overscroll-contain">
+        {navLeaf.items?.map((entry) =>
+          entry.items?.length ? (
+            <li
+              key={entry.label}
+              className="border-b border-border/40 last:border-b-0"
+            >
+              <button
+                type="button"
+                onClick={() => onPush(entry)}
+                className="flex w-full items-center justify-between py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 ease"
+              >
+                {entry.label}
+                <ChevronRight className="size-4" />
+              </button>
+            </li>
+          ) : (
+            <li
+              key={entry.label}
+              className="border-b border-border/40 last:border-b-0"
+            >
+              <button
+                type="button"
+                className="w-full py-2.5 text-left text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 ease"
+              >
+                {entry.label}
+              </button>
+            </li>
+          ),
         )}
-      >
-        <div className="overflow-hidden">
-          <ul className="flex flex-col gap-1 pb-3 pl-1">
-            {items.map((entry) =>
-              isNavBranch(entry) ? (
-                <li key={entry.label}>
-                  <p className="px-2 pt-1 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground/70">
-                    {entry.label}
-                  </p>
-                  <ul className="flex flex-col">
-                    {entry.items.map((child) => (
-                      <li key={child.label}>
-                        <button
-                          type="button"
-                          className="w-full rounded-lg px-2 py-2 text-left text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors duration-150 ease"
-                        >
-                          {child.label}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ) : (
-                <li key={entry.label}>
-                  <button
-                    type="button"
-                    className="w-full rounded-lg px-2 py-2 text-left text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors duration-150 ease"
-                  >
-                    {entry.label}
-                  </button>
-                </li>
-              ),
-            )}
-          </ul>
-        </div>
-      </div>
+      </ul>
     </div>
+  )
+}
+
+function MobileNav() {
+  const [stack, setStack] = useState<NavLeaf[]>(NAV_ITEMS)
+  const [direction, setDirection] = useState(1)
+  const [ref, bounds] = useMeasure()
+  const shouldReduceMotion = useReducedMotion()
+
+  const current = stack[stack.length - 1]
+
+  const push = (entry: NavLeaf) => {
+    setDirection(1)
+    setStack((prev) => [...prev, entry])
+  }
+
+  const pop = () => {
+    if (stack.length <= 1) return
+    setDirection(-1)
+    setStack((prev) => prev.slice(0, -1))
+  }
+
+  return (
+    <div className="relative grid overflow-hidden">
+      <motion.div
+        animate={{ height: bounds.height }}
+        className="multi-step-wrapper"
+      >
+        <div className="multi-step-inner" ref={ref}>
+          <AnimatePresence initial={false} custom={direction} mode="popLayout">
+            <motion.div
+              key={current.label}
+              custom={direction}
+              variants={{
+                enter: (dir: number) =>
+                  shouldReduceMotion
+                    ? { x: 0, opacity: 0 }
+                    : { x: `${dir * 100}%`, opacity: 0 },
+                center: { x: 0, opacity: 1 },
+                exit: (dir: number) =>
+                  shouldReduceMotion
+                    ? { x: 0, opacity: 0 }
+                    : { x: `${dir * -100}%`, opacity: 0 },
+              }}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0 }
+                  : {
+                      x: { duration: 0.28, ease: [0.32, 0.72, 0, 1] },
+                      opacity: { duration: 0.25, ease: "easeOut" },
+                    }
+              }
+              className="col-start-1 row-start-1 w-full"
+            >
+              <MobileNavPanelContent
+                navLeaf={current}
+                onBack={pop}
+                onPush={push}
+              />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
+function DesktopNav() {
+  return (
+    <Menubar className="hidden md:flex h-auto border-0 bg-transparent p-0 shadow-none gap-1">
+      {NAV_ITEMS[0].items?.map((menu) => (
+        <MenubarMenu key={menu.label}>
+          <MenubarTrigger className="rounded-lg px-3 py-1.5 text-sm font-normal text-muted-foreground data-[state=open]:text-foreground focus:text-foreground">
+            {menu.label}
+          </MenubarTrigger>
+          <MenubarContent className="min-w-48 rounded-xl">
+            <MenubarGroup>
+              {menu.items.map((entry) =>
+                entry.items ? (
+                  <MenubarSub key={entry.label}>
+                    <MenubarSubTrigger>{entry.label}</MenubarSubTrigger>
+                    <MenubarSubContent className="rounded-xl">
+                      <MenubarGroup>
+                        {entry.items?.map((child: NavLeaf) => (
+                          <MenubarItem key={child.label}>
+                            {child.label}
+                          </MenubarItem>
+                        ))}
+                      </MenubarGroup>
+                    </MenubarSubContent>
+                  </MenubarSub>
+                ) : (
+                  <MenubarItem key={entry.label}>{entry.label}</MenubarItem>
+                ),
+              )}
+            </MenubarGroup>
+          </MenubarContent>
+        </MenubarMenu>
+      ))}
+    </Menubar>
   )
 }
 
@@ -159,37 +268,7 @@ export default function Header() {
         </div>
 
         {/* Desktop nav */}
-        <Menubar className="hidden md:flex h-auto border-0 bg-transparent p-0 shadow-none gap-1">
-          {NAV_ITEMS.map((menu) => (
-            <MenubarMenu key={menu.label}>
-              <MenubarTrigger className="rounded-lg px-3 py-1.5 text-sm font-normal text-muted-foreground data-[state=open]:text-foreground focus:text-foreground">
-                {menu.label}
-              </MenubarTrigger>
-              <MenubarContent className="min-w-48 rounded-xl">
-                <MenubarGroup>
-                  {menu.items.map((entry) =>
-                    isNavBranch(entry) ? (
-                      <MenubarSub key={entry.label}>
-                        <MenubarSubTrigger>{entry.label}</MenubarSubTrigger>
-                        <MenubarSubContent className="rounded-xl">
-                          <MenubarGroup>
-                            {entry.items.map((child) => (
-                              <MenubarItem key={child.label}>
-                                {child.label}
-                              </MenubarItem>
-                            ))}
-                          </MenubarGroup>
-                        </MenubarSubContent>
-                      </MenubarSub>
-                    ) : (
-                      <MenubarItem key={entry.label}>{entry.label}</MenubarItem>
-                    ),
-                  )}
-                </MenubarGroup>
-              </MenubarContent>
-            </MenubarMenu>
-          ))}
-        </Menubar>
+        <DesktopNav />
 
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
@@ -239,14 +318,8 @@ export default function Header() {
                 />
                 <div className="px-5 pt-4 pb-[max(2rem,env(safe-area-inset-bottom))]">
                   <Drawer.Title className="sr-only">Menu</Drawer.Title>
-                  <nav className="flex flex-col">
-                    {NAV_ITEMS.map((menu) => (
-                      <MobileNavSection
-                        key={menu.label}
-                        label={menu.label}
-                        items={menu.items}
-                      />
-                    ))}
+                  <nav>
+                    <MobileNav />
                   </nav>
                   <div className="flex gap-3 mt-4">
                     <Button
