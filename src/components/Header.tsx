@@ -1,8 +1,128 @@
-import { Menu, Wallet, X } from "lucide-react"
+import { ChevronDown, Menu, Wallet, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Drawer } from "vaul"
+import { cn } from "@/lib/utils"
 import ThemeToggle from "./ThemeToggle"
 import { Button } from "./ui/button"
+import {
+  Menubar,
+  MenubarContent,
+  MenubarGroup,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarTrigger,
+} from "./ui/menubar"
+
+const NAV_ITEMS = [
+  {
+    label: "Features",
+    items: [
+      { label: "Send & receive" },
+      { label: "Swap tokens" },
+      { label: "Portfolio tracker" },
+      {
+        label: "Security",
+        items: [
+          { label: "Recovery phrase" },
+          { label: "Biometrics" },
+          { label: "Hardware keys" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Learn",
+    items: [
+      { label: "Getting started" },
+      { label: "Guides" },
+      {
+        label: "Resources",
+        items: [{ label: "Docs" }, { label: "Blog" }, { label: "FAQ" }],
+      },
+    ],
+  },
+] as const
+
+type NavLeaf = { label: string; items?: undefined }
+type NavBranch = { label: string; items: readonly NavLeaf[] }
+type NavEntry = NavLeaf | NavBranch
+
+function isNavBranch(entry: NavEntry): entry is NavBranch {
+  return "items" in entry && entry.items !== undefined
+}
+
+function MobileNavSection({
+  label,
+  items,
+}: {
+  label: string
+  items: readonly NavEntry[]
+}) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="border-b border-border/40 last:border-b-0">
+      <button
+        type="button"
+        className="flex w-full items-center justify-between py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 ease"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        {label}
+        <ChevronDown
+          className={cn(
+            "size-4 transition-transform duration-200 ease-out",
+            open && "rotate-180",
+          )}
+        />
+      </button>
+      <div
+        className={cn(
+          "grid transition-[grid-template-rows] duration-200 ease-out",
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        )}
+      >
+        <div className="overflow-hidden">
+          <ul className="flex flex-col gap-1 pb-3 pl-1">
+            {items.map((entry) =>
+              isNavBranch(entry) ? (
+                <li key={entry.label}>
+                  <p className="px-2 pt-1 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground/70">
+                    {entry.label}
+                  </p>
+                  <ul className="flex flex-col">
+                    {entry.items.map((child) => (
+                      <li key={child.label}>
+                        <button
+                          type="button"
+                          className="w-full rounded-lg px-2 py-2 text-left text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors duration-150 ease"
+                        >
+                          {child.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ) : (
+                <li key={entry.label}>
+                  <button
+                    type="button"
+                    className="w-full rounded-lg px-2 py-2 text-left text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors duration-150 ease"
+                  >
+                    {entry.label}
+                  </button>
+                </li>
+              ),
+            )}
+          </ul>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -39,14 +159,37 @@ export default function Header() {
         </div>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          <p className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150">
-            Features
-          </p>
-          <p className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150">
-            Learn
-          </p>
-        </nav>
+        <Menubar className="hidden md:flex h-auto border-0 bg-transparent p-0 shadow-none gap-1">
+          {NAV_ITEMS.map((menu) => (
+            <MenubarMenu key={menu.label}>
+              <MenubarTrigger className="rounded-lg px-3 py-1.5 text-sm font-normal text-muted-foreground data-[state=open]:text-foreground focus:text-foreground">
+                {menu.label}
+              </MenubarTrigger>
+              <MenubarContent className="min-w-48 rounded-xl">
+                <MenubarGroup>
+                  {menu.items.map((entry) =>
+                    isNavBranch(entry) ? (
+                      <MenubarSub key={entry.label}>
+                        <MenubarSubTrigger>{entry.label}</MenubarSubTrigger>
+                        <MenubarSubContent className="rounded-xl">
+                          <MenubarGroup>
+                            {entry.items.map((child) => (
+                              <MenubarItem key={child.label}>
+                                {child.label}
+                              </MenubarItem>
+                            ))}
+                          </MenubarGroup>
+                        </MenubarSubContent>
+                      </MenubarSub>
+                    ) : (
+                      <MenubarItem key={entry.label}>{entry.label}</MenubarItem>
+                    ),
+                  )}
+                </MenubarGroup>
+              </MenubarContent>
+            </MenubarMenu>
+          ))}
+        </Menubar>
 
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
@@ -97,12 +240,13 @@ export default function Header() {
                 <div className="px-5 pt-4 pb-[max(2rem,env(safe-area-inset-bottom))]">
                   <Drawer.Title className="sr-only">Menu</Drawer.Title>
                   <nav className="flex flex-col">
-                    <p className="block py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 ease">
-                      Features
-                    </p>
-                    <p className="block py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 ease">
-                      Learn
-                    </p>
+                    {NAV_ITEMS.map((menu) => (
+                      <MobileNavSection
+                        key={menu.label}
+                        label={menu.label}
+                        items={menu.items}
+                      />
+                    ))}
                   </nav>
                   <div className="flex gap-3 mt-4">
                     <Button
