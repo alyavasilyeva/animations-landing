@@ -5,22 +5,25 @@ import {
   useIsPresent,
   useReducedMotion,
 } from "motion/react"
-import { useEffect, useState } from "react"
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react"
 import useMeasure from "react-use-measure"
 import { Drawer } from "vaul"
 import ThemeToggle from "./ThemeToggle"
 import { Button } from "./ui/button"
 import {
-  Menubar,
-  MenubarContent,
-  MenubarGroup,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
-  MenubarTrigger,
-} from "./ui/menubar"
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "./ui/navigation-menu"
 
 const NAV_ITEMS = [
   {
@@ -198,38 +201,103 @@ function MobileNav() {
 }
 
 function DesktopNav() {
+  const rootRef = useRef<HTMLElement | null>(null)
+  const [value, setValue] = useState("")
+  const [viewportX, setViewportX] = useState(0)
+
+  const syncViewportToTrigger = useCallback((nextValue: string) => {
+    const root = rootRef.current
+    if (!root || !nextValue) return
+
+    const trigger = root.querySelector<HTMLElement>(
+      `[data-slot="navigation-menu-item"][data-value="${CSS.escape(nextValue)}"] [data-slot="navigation-menu-trigger"]`,
+    )
+
+    if (!trigger) return
+
+    const rootRect = root.getBoundingClientRect()
+    const triggerRect = trigger.getBoundingClientRect()
+    setViewportX(triggerRect.left - rootRect.left)
+  }, [])
+
+  const handleValueChange = (nextValue: string) => {
+    setValue(nextValue)
+    if (nextValue) syncViewportToTrigger(nextValue)
+  }
+
+  useLayoutEffect(() => {
+    if (value) syncViewportToTrigger(value)
+  }, [value, syncViewportToTrigger])
+
+  useEffect(() => {
+    const onResize = () => {
+      if (value) syncViewportToTrigger(value)
+    }
+    window.addEventListener("resize", onResize)
+    return () => window.removeEventListener("resize", onResize)
+  }, [value, syncViewportToTrigger])
+
+  const linkClassName =
+    "rounded-lg px-2 py-1.5 text-muted-foreground hover:bg-primary/10 hover:text-foreground focus:bg-primary/10 focus:text-foreground data-[active=true]:bg-primary/10 data-[active=true]:text-foreground data-[active=true]:hover:bg-primary/10 data-[active=true]:focus:bg-primary/10"
+
   return (
-    <Menubar className="hidden md:flex h-auto border-0 bg-transparent p-0 shadow-none gap-1">
-      {NAV_ITEMS[0].items?.map((menu) => (
-        <MenubarMenu key={menu.label}>
-          <MenubarTrigger className="rounded-lg px-3 py-1.5 text-sm font-normal text-muted-foreground data-[state=open]:text-foreground focus:text-foreground">
-            {menu.label}
-          </MenubarTrigger>
-          <MenubarContent className="min-w-48 rounded-xl">
-            <MenubarGroup>
-              {menu.items.map((entry) =>
-                entry.items ? (
-                  <MenubarSub key={entry.label}>
-                    <MenubarSubTrigger>{entry.label}</MenubarSubTrigger>
-                    <MenubarSubContent className="rounded-xl">
-                      <MenubarGroup>
-                        {entry.items?.map((child: NavLeaf) => (
-                          <MenubarItem key={child.label}>
-                            {child.label}
-                          </MenubarItem>
-                        ))}
-                      </MenubarGroup>
-                    </MenubarSubContent>
-                  </MenubarSub>
-                ) : (
-                  <MenubarItem key={entry.label}>{entry.label}</MenubarItem>
-                ),
-              )}
-            </MenubarGroup>
-          </MenubarContent>
-        </MenubarMenu>
-      ))}
-    </Menubar>
+    <NavigationMenu
+      ref={rootRef}
+      value={value}
+      onValueChange={handleValueChange}
+      className="hidden md:flex"
+      delayDuration={120}
+      skipDelayDuration={300}
+      viewportStyle={{ transform: `translate3d(${viewportX}px, 0, 0)` }}
+    >
+      <NavigationMenuList>
+        {NAV_ITEMS[0].items?.map((menu) => (
+          <NavigationMenuItem
+            key={menu.label}
+            value={menu.label}
+            data-value={menu.label}
+          >
+            <NavigationMenuTrigger
+              onPointerEnter={() => syncViewportToTrigger(menu.label)}
+              className="h-auto rounded-lg bg-transparent px-3 py-1.5 text-sm font-normal text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-foreground data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent"
+            >
+              {menu.label}
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-52 gap-0.5 p-1">
+                {menu.items?.map((entry) =>
+                  entry.items?.length ? (
+                    <li key={entry.label} className="grid gap-0.5">
+                      <div className="px-2 pt-1.5 pb-0.5 text-xs font-medium text-muted-foreground">
+                        {entry.label}
+                      </div>
+                      {entry.items.map((child) => (
+                        <NavigationMenuLink
+                          key={child.label}
+                          href="#"
+                          className={linkClassName}
+                        >
+                          {child.label}
+                        </NavigationMenuLink>
+                      ))}
+                    </li>
+                  ) : (
+                    <li key={entry.label}>
+                      <NavigationMenuLink
+                        href="#"
+                        className={linkClassName}
+                      >
+                        {entry.label}
+                      </NavigationMenuLink>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        ))}
+      </NavigationMenuList>
+    </NavigationMenu>
   )
 }
 
