@@ -729,7 +729,7 @@ a {
 }
 
 .rise-in {
-  animation: rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: rise-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes rise-in {
@@ -745,6 +745,10 @@ a {
 
 /* Vaul does not handle reduced motion itself; snap the drawer open/closed */
 @media (prefers-reduced-motion: reduce) {
+  .rise-in {
+    animation: none;
+  }
+
   [data-vaul-drawer],
   [data-vaul-overlay] {
     transition: none;

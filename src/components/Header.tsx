@@ -152,11 +152,19 @@ function MobileNav() {
     setStack((prev) => prev.slice(0, -1))
   }
 
+  const panelEase = [0.32, 0.72, 0, 1] as const
+  const panelDuration = 0.25
+
   return (
     <div className="relative grid overflow-hidden">
       <motion.div
-        animate={{ height: bounds.height }}
-        className="multi-step-wrapper"
+        animate={{ height: bounds.height || "auto" }}
+        transition={
+          shouldReduceMotion
+            ? { duration: 0 }
+            : { duration: panelDuration, ease: panelEase }
+        }
+        className="multi-step-wrapper overflow-hidden"
       >
         <div className="multi-step-inner" ref={ref}>
           <AnimatePresence initial={false} custom={direction} mode="popLayout">
@@ -166,13 +174,19 @@ function MobileNav() {
               variants={{
                 enter: (dir: number) =>
                   shouldReduceMotion
-                    ? { x: 0, opacity: 0 }
-                    : { x: `${dir * 100}%`, opacity: 0 },
-                center: { x: 0, opacity: 1 },
+                    ? { transform: "translate3d(0,0,0)", opacity: 0 }
+                    : {
+                        transform: `translate3d(${dir * 100}%,0,0)`,
+                        opacity: 0,
+                      },
+                center: { transform: "translate3d(0,0,0)", opacity: 1 },
                 exit: (dir: number) =>
                   shouldReduceMotion
-                    ? { x: 0, opacity: 0 }
-                    : { x: `${dir * -100}%`, opacity: 0 },
+                    ? { transform: "translate3d(0,0,0)", opacity: 0 }
+                    : {
+                        transform: `translate3d(${dir * -100}%,0,0)`,
+                        opacity: 0,
+                      },
               }}
               initial="enter"
               animate="center"
@@ -181,11 +195,11 @@ function MobileNav() {
                 shouldReduceMotion
                   ? { duration: 0 }
                   : {
-                      x: { duration: 0.28, ease: [0.32, 0.72, 0, 1] },
-                      opacity: { duration: 0.25, ease: "easeOut" },
+                      transform: { duration: panelDuration, ease: panelEase },
+                      opacity: { duration: panelDuration, ease: "easeOut" },
                     }
               }
-              className="col-start-1 row-start-1 w-full"
+              className="col-start-1 row-start-1 w-full will-change-transform"
             >
               <MobileNavPanelContent
                 navLeaf={current}
@@ -343,13 +357,13 @@ export default function Header() {
           <Button
             type="button"
             variant="outline"
-            className="text-sm px-4 py-2 rounded-xl text-muted-foreground hover:text-foreground transition-colors hover:scale-[1.02] active:scale-[0.98]"
+            className="text-sm px-4 py-2 rounded-xl text-muted-foreground hover:text-foreground transition-[color,transform] duration-150 ease [@media(hover:hover)]:hover:scale-[1.02] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
           >
             Sign in
           </Button>
           <Button
             type="button"
-            className="text-sm px-5 py-2 rounded-xl font-semibold text-white transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
+            className="text-sm px-5 py-2 rounded-xl font-semibold text-white transition-[opacity,transform] duration-150 ease hover:opacity-90 [@media(hover:hover)]:hover:scale-[1.02] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
             style={{ background: "linear-gradient(135deg, #8b5cf6, #7c3aed)" }}
           >
             Get wallet
