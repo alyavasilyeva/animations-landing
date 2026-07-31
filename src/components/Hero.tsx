@@ -255,7 +255,7 @@ export default function Hero() {
           </h1>
 
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-lg mb-8 sm:mb-10">
-            NOVA is a non-custodial Web3 wallet built for DeFi power users.
+            WALLET is a non-custodial Web3 wallet built for DeFi power users.
             Swap, bridge, earn, and collect — all from one beautifully designed
             interface.
           </p>
