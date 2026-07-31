@@ -1,4 +1,5 @@
 import { Wallet } from "lucide-react"
+import { SITE_LINKS } from "@/lib/site-links"
 
 export default function Footer() {
   return (
@@ -23,20 +24,13 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
-            {[
-              "Privacy",
-              "Terms",
-              "Developers",
-              "Bug Bounty",
-              "Status",
-              "Blog",
-            ].map((l) => (
+            {SITE_LINKS.map(({ label, href }) => (
               <a
-                key={l}
-                href={`/`}
+                key={label}
+                href={href}
                 className="hover:text-foreground transition-colors"
               >
-                {l}
+                {label}
               </a>
             ))}
           </div>

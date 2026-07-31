@@ -14,6 +14,7 @@ import {
 } from "react"
 import useMeasure from "react-use-measure"
 import { Drawer } from "vaul"
+import { HEADER_LINKS } from "@/lib/site-links"
 import ThemeToggle from "./ThemeToggle"
 import { Button } from "./ui/button"
 import {
@@ -25,7 +26,14 @@ import {
   NavigationMenuTrigger,
 } from "./ui/navigation-menu"
 
-const NAV_ITEMS = [
+type NavLeaf = {
+  label: string
+  href?: string
+  items?: NavLeaf[]
+  isChild: boolean
+}
+
+const NAV_ITEMS: NavLeaf[] = [
   {
     label: "Menu",
     items: [
@@ -57,19 +65,21 @@ const NAV_ITEMS = [
             label: "Resources",
             items: [
               { label: "Docs", isChild: true },
-              { label: "Blog", isChild: true },
               { label: "FAQ", isChild: true },
             ],
             isChild: true,
           },
         ],
       },
+      ...HEADER_LINKS.map((link) => ({
+        label: link.label,
+        href: link.href,
+        isChild: true,
+      })),
     ],
     isChild: false,
   },
 ]
-
-type NavLeaf = { label: string; items?: NavLeaf[]; isChild: boolean }
 
 function MobileNavPanelContent({
   navLeaf,
@@ -119,12 +129,12 @@ function MobileNavPanelContent({
               key={entry.label}
               className="border-b border-border/40 last:border-b-0"
             >
-              <button
-                type="button"
-                className="w-full py-2.5 text-left text-sm text-foreground/85 hover:text-foreground transition-colors duration-150 ease"
+              <a
+                href={entry.href ?? "#"}
+                className="block w-full py-2.5 text-left text-sm text-foreground/85 hover:text-foreground transition-colors duration-150 ease"
               >
                 {entry.label}
-              </button>
+              </a>
             </li>
           ),
         )}
@@ -266,49 +276,63 @@ function DesktopNav() {
       viewportStyle={{ transform: `translate3d(${viewportX}px, 0, 0)` }}
     >
       <NavigationMenuList>
-        {NAV_ITEMS[0].items?.map((menu) => (
-          <NavigationMenuItem
-            key={menu.label}
-            value={menu.label}
-            data-value={menu.label}
-          >
-            <NavigationMenuTrigger
-              onPointerEnter={() => syncViewportToTrigger(menu.label)}
-              className="h-auto rounded-lg bg-transparent px-3 py-1.5 text-sm font-normal text-foreground/70 shadow-none hover:bg-transparent hover:text-foreground focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-foreground data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent"
+        {NAV_ITEMS[0]?.items
+          ?.filter((menu): menu is NavLeaf & { items: NavLeaf[] } =>
+            Boolean(menu.items?.length),
+          )
+          .map((menu) => (
+            <NavigationMenuItem
+              key={menu.label}
+              value={menu.label}
+              data-value={menu.label}
             >
-              {menu.label}
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-52 gap-0.5 p-1">
-                {menu.items?.map((entry) =>
-                  entry.items?.length ? (
-                    <li key={entry.label} className="grid gap-0.5">
-                      <div className="px-2 pt-2 pb-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                        {entry.label}
-                      </div>
-                      {entry.items.map((child) => (
+              <NavigationMenuTrigger
+                onPointerEnter={() => syncViewportToTrigger(menu.label)}
+                className="h-auto rounded-lg bg-transparent px-3 py-1.5 text-sm font-normal text-foreground/70 shadow-none hover:bg-transparent hover:text-foreground focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-foreground data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent"
+              >
+                {menu.label}
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-52 gap-0.5 p-1">
+                  {menu.items?.map((entry) =>
+                    entry.items?.length ? (
+                      <li key={entry.label} className="grid gap-0.5">
+                        <div className="px-2 pt-2 pb-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                          {entry.label}
+                        </div>
+                        {entry.items.map((child) => (
+                          <NavigationMenuLink
+                            key={child.label}
+                            href={child.href ?? "#"}
+                            className={linkClassName}
+                          >
+                            {child.label}
+                          </NavigationMenuLink>
+                        ))}
+                      </li>
+                    ) : (
+                      <li key={entry.label}>
                         <NavigationMenuLink
-                          key={child.label}
-                          href="#"
+                          href={entry.href ?? "#"}
                           className={linkClassName}
                         >
-                          {child.label}
+                          {entry.label}
                         </NavigationMenuLink>
-                      ))}
-                    </li>
-                  ) : (
-                    <li key={entry.label}>
-                      <NavigationMenuLink
-                        href="#"
-                        className={linkClassName}
-                      >
-                        {entry.label}
-                      </NavigationMenuLink>
-                    </li>
-                  ),
-                )}
-              </ul>
-            </NavigationMenuContent>
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          ))}
+        {HEADER_LINKS.map((link) => (
+          <NavigationMenuItem key={link.label}>
+            <NavigationMenuLink
+              href={link.href}
+              className="inline-flex h-auto items-center rounded-lg bg-transparent px-3 py-1.5 text-sm font-normal text-foreground/70 no-underline hover:bg-transparent hover:text-foreground focus:bg-transparent"
+            >
+              {link.label}
+            </NavigationMenuLink>
           </NavigationMenuItem>
         ))}
       </NavigationMenuList>
