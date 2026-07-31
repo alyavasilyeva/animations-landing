@@ -26,11 +26,24 @@ function applyThemeMode(mode: ThemeMode) {
   document.documentElement.style.colorScheme = mode
 }
 
+function readDocumentTheme(): ThemeMode | null {
+  if (typeof document === "undefined") {
+    return null
+  }
+  const attr = document.documentElement.getAttribute("data-theme")
+  if (attr === "light" || attr === "dark") {
+    return attr
+  }
+  return null
+}
+
 export default function ThemeToggle() {
-  const [mode, setMode] = useState<ThemeMode>("light")
+  const [mode, setMode] = useState<ThemeMode>(
+    () => readDocumentTheme() ?? "light",
+  )
 
   useEffect(() => {
-    const initialMode = getInitialMode()
+    const initialMode = readDocumentTheme() ?? getInitialMode()
     setMode(initialMode)
     applyThemeMode(initialMode)
   }, [])
