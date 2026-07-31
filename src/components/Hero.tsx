@@ -14,6 +14,7 @@ import {
   TrendingUp,
   Wallet,
 } from "lucide-react"
+import { AnimatePresence, motion, useReducedMotion } from "motion/react"
 import { useState } from "react"
 import type { TooltipContentProps } from "recharts"
 import {
@@ -25,6 +26,39 @@ import {
   YAxis,
 } from "recharts"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+const WALLET_TABS = ["portfolio", "assets", "defi"] as const
+type WalletTab = (typeof WALLET_TABS)[number]
+
+const RANGE_OPTIONS = ["1W", "1M", "3M", "1Y"] as const
+type RangeOption = (typeof RANGE_OPTIONS)[number]
+
+const EASE_OUT_EXPO = [0.19, 1, 0.22, 1] as const
+
+const DEFI_POSITIONS = [
+  {
+    protocol: "Aave v3",
+    type: "Lending",
+    apy: "6.8%",
+    deposited: "$8,420",
+    color: "#b6509e",
+  },
+  {
+    protocol: "Uniswap v3",
+    type: "LP ETH/USDC",
+    apy: "18.4%",
+    deposited: "$4,200",
+    color: "#ff007a",
+  },
+  {
+    protocol: "Lido Finance",
+    type: "stETH",
+    apy: "3.9%",
+    deposited: "$12,100",
+    color: "#00a3ff",
+  },
+] as const
 
 // --- Data ---
 const portfolioHistory = [
@@ -152,14 +186,19 @@ function CustomTooltip({ active, payload, label }: TooltipContentProps) {
 }
 
 export default function Hero() {
-  const [activeRange, setActiveRange] = useState<"1W" | "1M" | "3M" | "1Y">(
-    "1M",
-  )
+  const shouldReduceMotion = useReducedMotion()
+  const [activeRange, setActiveRange] = useState<RangeOption>("1M")
   const [hidden, setHidden] = useState(false)
   const [copied, setCopied] = useState(false)
-  const [activeTab, setActiveTab] = useState<"portfolio" | "assets" | "defi">(
-    "portfolio",
-  )
+  const [activeTab, setActiveTab] = useState<WalletTab>("portfolio")
+
+  const indicatorTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { type: "spring" as const, duration: 0.35, bounce: 0 }
+
+  const panelTransition = shouldReduceMotion
+    ? { duration: 0.12, ease: "easeOut" as const }
+    : { duration: 0.22, ease: EASE_OUT_EXPO }
 
   function handleCopy() {
     setCopied(true)
@@ -385,206 +424,230 @@ export default function Hero() {
             </div>
 
             {/* Tabs */}
-            <div className="flex px-5 gap-1 border-b border-border">
-              {(["portfolio", "assets", "defi"] as const).map((tab) => (
-                <Button
-                  key={tab}
-                  type="button"
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => setActiveTab(tab)}
-                  className={`rounded-none px-3 py-2.5 h-auto capitalize border-b-2 -mb-px transition-colors duration-150 hover:bg-transparent ${
-                    activeTab === tab
-                      ? "text-primary border-primary hover:text-primary"
-                      : "text-muted-foreground border-transparent hover:text-foreground"
-                  }`}
-                >
-                  {tab}
-                </Button>
-              ))}
+            <div
+              className="flex px-5 gap-1 border-b border-border"
+              role="tablist"
+              aria-label="Wallet sections"
+            >
+              {WALLET_TABS.map((tab) => {
+                const isActive = activeTab === tab
+                return (
+                  <button
+                    key={tab}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActiveTab(tab)}
+                    className={cn(
+                      "relative px-3 py-2.5 text-xs font-medium capitalize transition-colors duration-150 ease hover:cursor-pointer",
+                      isActive
+                        ? "text-primary"
+                        : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    {tab}
+                    {isActive ? (
+                      <motion.span
+                        layoutId="wallet-tab-underline"
+                        className="absolute inset-x-0 -bottom-px h-0.5 bg-primary"
+                        transition={indicatorTransition}
+                      />
+                    ) : null}
+                  </button>
+                )
+              })}
             </div>
 
             {/* Tab content */}
-            <div className="min-h-[260px]">
-              {activeTab === "portfolio" && (
-                <div className="px-5 pt-4 pb-2">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex gap-1">
-                      {(["1W", "1M", "3M", "1Y"] as const).map((r) => (
-                        <Button
-                          key={r}
-                          type="button"
-                          variant="ghost"
-                          size="xs"
-                          onClick={() => setActiveRange(r)}
-                          className={`px-2 py-0.5 h-auto rounded font-mono transition-colors duration-150 ${
-                            activeRange === r
-                              ? "text-primary bg-primary/10 hover:bg-primary/10 hover:text-primary"
-                              : "text-muted-foreground hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
-                          }`}
-                        >
-                          {r}
-                        </Button>
-                      ))}
-                    </div>
-                    <span className="text-xs text-muted-foreground font-mono">
-                      +5.86%
-                    </span>
-                  </div>
-                  <ResponsiveContainer width="100%" height={160}>
-                    <AreaChart
-                      data={chartData}
-                      margin={{ top: 4, right: 0, bottom: 0, left: 0 }}
-                    >
-                      <defs>
-                        <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-                          <stop
-                            offset="0%"
-                            stopColor="var(--primary)"
-                            stopOpacity={0.35}
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="var(--primary)"
-                            stopOpacity={0}
-                          />
-                        </linearGradient>
-                      </defs>
-                      <XAxis
-                        dataKey="date"
-                        tick={{
-                          fill: "var(--muted-foreground)",
-                          fontSize: 10,
-                          fontFamily: "JetBrains Mono",
-                        }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <YAxis domain={["auto", "auto"]} hide />
-                      <Tooltip content={CustomTooltip} />
-                      <Area
-                        type="monotone"
-                        dataKey="value"
-                        stroke="var(--primary)"
-                        strokeWidth={2}
-                        fill="url(#grad)"
-                        dot={false}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-
-              {activeTab === "assets" && (
-                <div className="divide-y divide-border">
-                  {assets.map((asset) => (
-                    <div
-                      key={asset.symbol}
-                      className="flex items-center justify-between px-5 py-3 hover:bg-muted/60 transition-colors cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <AssetIcon
-                          color={asset.color}
-                          bg={asset.bg}
-                          symbol={asset.symbol}
-                        />
-                        <div>
-                          <div className="text-sm font-semibold text-foreground">
-                            {asset.name}
-                          </div>
-                          <div className="text-xs text-muted-foreground font-mono">
-                            {asset.balance} {asset.symbol}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-semibold font-mono text-foreground">
-                          $
-                          {asset.value.toLocaleString("en-US", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
+            <div className="relative min-h-[260px] overflow-hidden">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={activeTab}
+                  role="tabpanel"
+                  initial={
+                    shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }
+                  }
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={
+                    shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }
+                  }
+                  transition={panelTransition}
+                >
+                  {activeTab === "portfolio" ? (
+                    <div className="px-5 pt-4 pb-2">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex gap-1">
+                          {RANGE_OPTIONS.map((r) => {
+                            const isActive = activeRange === r
+                            return (
+                              <button
+                                key={r}
+                                type="button"
+                                onClick={() => setActiveRange(r)}
+                                className={cn(
+                                  "relative px-2 py-0.5 text-xs font-mono transition-colors duration-150 ease hover:cursor-pointer",
+                                  isActive
+                                    ? "text-primary"
+                                    : "text-muted-foreground hover:text-foreground",
+                                )}
+                              >
+                                {isActive ? (
+                                  <motion.span
+                                    layoutId="wallet-range-pill"
+                                    className="absolute inset-0 bg-primary/10"
+                                    style={{ borderRadius: 4 }}
+                                    transition={indicatorTransition}
+                                  />
+                                ) : null}
+                                <span className="relative z-10">{r}</span>
+                              </button>
+                            )
                           })}
                         </div>
-                        <div
-                          className={`text-xs font-mono font-medium flex items-center justify-end gap-0.5 ${
-                            asset.positive
-                              ? "text-emerald-600 dark:text-emerald-400"
-                              : "text-red-600 dark:text-red-400"
-                          }`}
-                        >
-                          {asset.positive ? (
-                            <ArrowUpRight className="w-3 h-3" />
-                          ) : (
-                            <ArrowDownRight className="w-3 h-3" />
-                          )}
-                          {Math.abs(asset.change)}%
-                        </div>
+                        <span className="text-xs text-muted-foreground font-mono">
+                          +5.86%
+                        </span>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {activeTab === "defi" && (
-                <div className="px-5 pt-5 space-y-3">
-                  {[
-                    {
-                      protocol: "Aave v3",
-                      type: "Lending",
-                      apy: "6.8%",
-                      deposited: "$8,420",
-                      color: "#b6509e",
-                    },
-                    {
-                      protocol: "Uniswap v3",
-                      type: "LP ETH/USDC",
-                      apy: "18.4%",
-                      deposited: "$4,200",
-                      color: "#ff007a",
-                    },
-                    {
-                      protocol: "Lido Finance",
-                      type: "stETH",
-                      apy: "3.9%",
-                      deposited: "$12,100",
-                      color: "#00a3ff",
-                    },
-                  ].map((pos) => (
-                    <div
-                      key={pos.protocol}
-                      className="flex items-center justify-between p-3 rounded-xl border border-border bg-muted/40 hover:border-primary/30 hover:bg-muted/70 transition-colors cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div
-                          className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold"
-                          style={{ background: `${pos.color}22` }}
+                      <ResponsiveContainer width="100%" height={160}>
+                        <AreaChart
+                          data={chartData}
+                          margin={{ top: 4, right: 0, bottom: 0, left: 0 }}
                         >
-                          <TrendingUp
-                            className="w-3.5 h-3.5"
-                            style={{ color: pos.color }}
+                          <defs>
+                            <linearGradient
+                              id="grad"
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1"
+                            >
+                              <stop
+                                offset="0%"
+                                stopColor="var(--primary)"
+                                stopOpacity={0.35}
+                              />
+                              <stop
+                                offset="100%"
+                                stopColor="var(--primary)"
+                                stopOpacity={0}
+                              />
+                            </linearGradient>
+                          </defs>
+                          <XAxis
+                            dataKey="date"
+                            tick={{
+                              fill: "var(--muted-foreground)",
+                              fontSize: 10,
+                              fontFamily: "JetBrains Mono",
+                            }}
+                            axisLine={false}
+                            tickLine={false}
                           />
-                        </div>
-                        <div>
-                          <div className="text-xs font-semibold text-foreground">
-                            {pos.protocol}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {pos.type}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xs font-mono text-emerald-600 dark:text-emerald-400">
-                          {pos.apy} APY
-                        </div>
-                        <div className="text-xs text-muted-foreground font-mono">
-                          {pos.deposited}
-                        </div>
-                      </div>
+                          <YAxis domain={["auto", "auto"]} hide />
+                          <Tooltip content={CustomTooltip} />
+                          <Area
+                            type="monotone"
+                            dataKey="value"
+                            stroke="var(--primary)"
+                            strokeWidth={2}
+                            fill="url(#grad)"
+                            dot={false}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
                     </div>
-                  ))}
-                </div>
-              )}
+                  ) : null}
+
+                  {activeTab === "assets" ? (
+                    <div className="divide-y divide-border">
+                      {assets.map((asset) => (
+                        <div
+                          key={asset.symbol}
+                          className="flex items-center justify-between px-5 py-3 hover:bg-muted/60 transition-colors cursor-pointer"
+                        >
+                          <div className="flex items-center gap-3">
+                            <AssetIcon
+                              color={asset.color}
+                              bg={asset.bg}
+                              symbol={asset.symbol}
+                            />
+                            <div>
+                              <div className="text-sm font-semibold text-foreground">
+                                {asset.name}
+                              </div>
+                              <div className="text-xs text-muted-foreground font-mono">
+                                {asset.balance} {asset.symbol}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm font-semibold font-mono text-foreground">
+                              $
+                              {asset.value.toLocaleString("en-US", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}
+                            </div>
+                            <div
+                              className={`text-xs font-mono font-medium flex items-center justify-end gap-0.5 ${
+                                asset.positive
+                                  ? "text-emerald-600 dark:text-emerald-400"
+                                  : "text-red-600 dark:text-red-400"
+                              }`}
+                            >
+                              {asset.positive ? (
+                                <ArrowUpRight className="w-3 h-3" />
+                              ) : (
+                                <ArrowDownRight className="w-3 h-3" />
+                              )}
+                              {Math.abs(asset.change)}%
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {activeTab === "defi" ? (
+                    <div className="px-5 pt-5 space-y-3">
+                      {DEFI_POSITIONS.map((pos) => (
+                        <div
+                          key={pos.protocol}
+                          className="flex items-center justify-between p-3 rounded-xl border border-border bg-muted/40 hover:border-primary/30 hover:bg-muted/70 transition-colors cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <div
+                              className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold"
+                              style={{ background: `${pos.color}22` }}
+                            >
+                              <TrendingUp
+                                className="w-3.5 h-3.5"
+                                style={{ color: pos.color }}
+                              />
+                            </div>
+                            <div>
+                              <div className="text-xs font-semibold text-foreground">
+                                {pos.protocol}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {pos.type}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-xs font-mono text-emerald-600 dark:text-emerald-400">
+                              {pos.apy} APY
+                            </div>
+                            <div className="text-xs text-muted-foreground font-mono">
+                              {pos.deposited}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             {/* Quick actions */}
