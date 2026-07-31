@@ -323,6 +323,50 @@ body,
   min-height: 100%;
 }
 
+/* Theme switch — View Transitions circle reveal (css-animations recipe).
+   Old + new page snapshots swap together so background and UI stay in sync. */
+html {
+  --theme-x: 50%;
+  --theme-y: 50%;
+  --theme-r: 100vmax;
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --theme-reveal-ms: 500ms;
+}
+
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  html[data-theme-transition="reveal"]::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  html[data-theme-transition="reveal"]::view-transition-new(root) {
+    z-index: 2;
+    animation: theme-circle-reveal var(--theme-reveal-ms) var(--ease-out-expo)
+      both;
+  }
+
+  @keyframes theme-circle-reveal {
+    from {
+      clip-path: circle(0px at var(--theme-x) var(--theme-y));
+    }
+    to {
+      clip-path: circle(var(--theme-r) at var(--theme-x) var(--theme-y));
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);

@@ -28,7 +28,7 @@ export default function Footer() {
               <a
                 key={label}
                 href={href}
-                className="hover:text-foreground transition-colors"
+                className="hover:text-foreground transition-[color]"
               >
                 {label}
               </a>

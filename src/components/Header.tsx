@@ -101,7 +101,7 @@ function MobileNavPanelContent({
         <button
           type="button"
           onClick={onBack}
-          className="mb-1 flex w-full items-center gap-1 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 ease"
+          className="mb-1 flex w-full items-center gap-1 py-2 text-sm text-muted-foreground hover:text-foreground transition-[color] duration-150 ease"
         >
           <ChevronLeft className="size-4" />
           <span className="font-medium text-foreground">{navLeaf.label}</span>
@@ -118,7 +118,7 @@ function MobileNavPanelContent({
               <button
                 type="button"
                 onClick={() => onPush(entry)}
-                className="flex w-full items-center justify-between py-2.5 text-sm text-foreground/85 hover:text-foreground transition-colors duration-150 ease"
+                className="flex w-full items-center justify-between py-2.5 text-sm text-foreground/85 hover:text-foreground transition-[color] duration-150 ease"
               >
                 {entry.label}
                 <ChevronRight className="size-4 text-muted-foreground" />
@@ -131,7 +131,7 @@ function MobileNavPanelContent({
             >
               <a
                 href={entry.href ?? "#"}
-                className="block w-full py-2.5 text-left text-sm text-foreground/85 hover:text-foreground transition-colors duration-150 ease"
+                className="block w-full py-2.5 text-left text-sm text-foreground/85 hover:text-foreground transition-[color] duration-150 ease"
               >
                 {entry.label}
               </a>
@@ -382,7 +382,7 @@ export default function Header() {
           <Button
             type="button"
             variant="outline"
-            className="text-sm px-4 py-2 rounded-xl text-muted-foreground hover:text-foreground transition-[color,transform] duration-150 ease [@media(hover:hover)]:hover:scale-[1.02] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
+            className="text-sm px-4 py-2 rounded-xl text-muted-foreground hover:text-foreground transition-[transform] duration-150 ease [@media(hover:hover)]:hover:scale-[1.02] active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
           >
             Sign in
           </Button>

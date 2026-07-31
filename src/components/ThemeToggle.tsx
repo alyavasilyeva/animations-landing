@@ -1,5 +1,5 @@
 import { Moon, Sun } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, type MouseEvent } from "react"
 import { Button } from "./ui/button"
 
 type ThemeMode = "light" | "dark"
@@ -19,11 +19,57 @@ function getInitialMode(): ThemeMode {
   return getSystemTheme()
 }
 
-function applyThemeMode(mode: ThemeMode) {
-  document.documentElement.classList.remove("light", "dark")
-  document.documentElement.classList.add(mode)
-  document.documentElement.setAttribute("data-theme", mode)
-  document.documentElement.style.colorScheme = mode
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+}
+
+function setThemeVars(mode: ThemeMode) {
+  const root = document.documentElement
+  root.classList.remove("light", "dark")
+  root.classList.add(mode)
+  root.setAttribute("data-theme", mode)
+  root.style.colorScheme = mode
+}
+
+function setRevealOrigin(fromEl?: HTMLElement | null) {
+  const root = document.documentElement
+  const rect = fromEl?.getBoundingClientRect()
+  const x = rect ? rect.left + rect.width / 2 : window.innerWidth / 2
+  const y = rect ? rect.top + rect.height / 2 : window.innerHeight / 2
+  const endRadius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y),
+  )
+
+  root.style.setProperty("--theme-x", `${x}px`)
+  root.style.setProperty("--theme-y", `${y}px`)
+  root.style.setProperty("--theme-r", `${endRadius}px`)
+}
+
+function applyThemeMode(
+  mode: ThemeMode,
+  options?: { animate?: boolean; fromEl?: HTMLElement | null },
+) {
+  const animate = options?.animate ?? false
+
+  if (
+    !animate ||
+    prefersReducedMotion() ||
+    typeof document.startViewTransition !== "function"
+  ) {
+    setThemeVars(mode)
+    return
+  }
+
+  setRevealOrigin(options?.fromEl)
+  document.documentElement.dataset.themeTransition = "reveal"
+  const transition = document.startViewTransition(() => {
+    setThemeVars(mode)
+  })
+
+  void transition.finished.finally(() => {
+    delete document.documentElement.dataset.themeTransition
+  })
 }
 
 function readDocumentTheme(): ThemeMode | null {
@@ -48,10 +94,10 @@ export default function ThemeToggle() {
     applyThemeMode(initialMode)
   }, [])
 
-  function toggleMode() {
+  function toggleMode(event: MouseEvent<HTMLButtonElement>) {
     const nextMode: ThemeMode = mode === "light" ? "dark" : "light"
     setMode(nextMode)
-    applyThemeMode(nextMode)
+    applyThemeMode(nextMode, { animate: true, fromEl: event.currentTarget })
     window.localStorage.setItem("theme", nextMode)
   }
 

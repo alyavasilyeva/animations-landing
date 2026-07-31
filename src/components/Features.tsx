@@ -45,18 +45,11 @@ export default function Features() {
   return (
     <section className="relative z-10 max-w-7xl mx-auto px-5 py-24 lg:py-32">
       <div className="text-center mb-16">
-        <div
-          className="inline-block text-xs font-mono font-semibold uppercase tracking-widest mb-4 px-3 py-1.5 rounded-full border"
-          style={{
-            color: "#8b5cf6",
-            borderColor: "rgba(139,92,246,0.3)",
-            background: "rgba(139,92,246,0.08)",
-          }}
-        >
+        <div className="inline-block text-xs font-mono font-semibold uppercase tracking-widest mb-4 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/8 text-primary">
           Everything in one wallet
         </div>
         <h2
-          className="text-4xl lg:text-5xl font-black tracking-tight mb-4"
+          className="text-4xl lg:text-5xl font-black tracking-tight mb-4 text-foreground"
           style={{ fontFamily: "'Outfit', sans-serif" }}
         >
           Built for the DeFi era
@@ -72,35 +65,16 @@ export default function Features() {
           ({ icon: Icon, title, label, desc, stat, statLabel }) => (
             <div
               key={title}
-              className="group relative rounded-2xl p-6 border hover:border-primary/40 transition-all duration-300 cursor-pointer overflow-hidden"
-              style={{
-                background: "linear-gradient(135deg, #0d0d1a, #0a0a14)",
-                borderColor: "rgba(139,92,246,0.12)",
-              }}
+              className="group relative rounded-2xl p-6 border border-border bg-card text-card-foreground hover:border-primary/40 transition-[border-color] duration-300 cursor-pointer overflow-hidden shadow-sm dark:shadow-none"
             >
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                style={{
-                  background:
-                    "radial-gradient(circle at 30% 50%, rgba(139,92,246,0.06), transparent 70%)",
-                }}
-              />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-[radial-gradient(circle_at_30%_50%,color-mix(in_oklab,var(--primary)_8%,transparent),transparent_70%)]" />
 
-              <div className="flex items-start justify-between mb-5">
-                <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center"
-                  style={{
-                    background: "rgba(139,92,246,0.12)",
-                    border: "1px solid rgba(139,92,246,0.2)",
-                  }}
-                >
-                  <Icon className="w-5 h-5" style={{ color: "#a78bfa" }} />
+              <div className="relative flex items-start justify-between mb-5">
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-primary/12 border border-primary/20">
+                  <Icon className="w-5 h-5 text-primary" />
                 </div>
                 <div className="text-right">
-                  <div
-                    className="text-lg font-black font-mono"
-                    style={{ color: "#10b981" }}
-                  >
+                  <div className="text-lg font-black font-mono text-emerald-600 dark:text-emerald-400">
                     {stat}
                   </div>
                   <div className="text-xs text-muted-foreground">
@@ -109,26 +83,20 @@ export default function Features() {
                 </div>
               </div>
 
-              <div
-                className="text-[10px] font-mono font-semibold uppercase tracking-widest mb-1.5"
-                style={{ color: "#8b5cf6" }}
-              >
+              <div className="relative text-[10px] font-mono font-semibold uppercase tracking-widest mb-1.5 text-primary">
                 {label}
               </div>
               <h3
-                className="text-xl font-bold mb-2.5"
+                className="relative text-xl font-bold mb-2.5 text-foreground"
                 style={{ fontFamily: "'Outfit', sans-serif" }}
               >
                 {title}
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="relative text-sm text-muted-foreground leading-relaxed">
                 {desc}
               </p>
 
-              <div
-                className="flex items-center gap-1 mt-5 text-xs font-semibold"
-                style={{ color: "#a78bfa" }}
-              >
+              <div className="relative flex items-center gap-1 mt-5 text-xs font-semibold text-primary">
                 Learn more{" "}
                 <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </div>

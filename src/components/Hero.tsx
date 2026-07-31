@@ -264,7 +264,7 @@ export default function Hero() {
             <Button
               type="button"
               size="lg"
-              className="w-full min-[420px]:w-auto justify-center rounded-xl font-semibold text-white transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-lg h-auto px-6 py-3.5"
+              className="w-full min-[420px]:w-auto justify-center rounded-xl font-semibold text-white transition-[opacity,transform] duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-lg h-auto px-6 py-3.5"
               style={{
                 background: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
                 boxShadow: "0 0 40px rgba(139,92,246,0.35)",
@@ -347,7 +347,7 @@ export default function Hero() {
                     type="button"
                     variant="ghost"
                     size="xs"
-                    className="-ml-1.5 h-auto gap-1 rounded-md px-1.5 py-0.5 text-xs font-mono text-foreground/70 transition-colors duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
+                    className="-ml-1.5 h-auto gap-1 rounded-md px-1.5 py-0.5 text-xs font-mono text-foreground/70 transition-[background-color] duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
                     onClick={handleCopy}
                   >
                     {address}
@@ -364,7 +364,7 @@ export default function Hero() {
                   type="button"
                   variant="ghost"
                   size="icon-xs"
-                  className="rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
+                  className="rounded-lg text-muted-foreground transition-[background-color] duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
                   aria-label="Notifications"
                 >
                   <Bell className="w-4 h-4" />
@@ -373,7 +373,7 @@ export default function Hero() {
                   type="button"
                   variant="ghost"
                   size="icon-xs"
-                  className="rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
+                  className="rounded-lg text-muted-foreground transition-[background-color] duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
                   aria-label="Settings"
                 >
                   <Settings className="w-4 h-4" />
@@ -391,7 +391,7 @@ export default function Hero() {
                   type="button"
                   variant="ghost"
                   size="icon-xs"
-                  className="rounded-lg text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
+                  className="rounded-lg text-muted-foreground transition-[background-color] duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
                   aria-label={hidden ? "Show balance" : "Hide balance"}
                   onClick={() => setHidden(!hidden)}
                 >
@@ -439,7 +439,7 @@ export default function Hero() {
                     aria-selected={isActive}
                     onClick={() => setActiveTab(tab)}
                     className={cn(
-                      "relative px-3 py-2.5 text-xs font-medium capitalize transition-colors duration-150 ease hover:cursor-pointer",
+                      "relative px-3 py-2.5 text-xs font-medium capitalize transition-[background-color,color] duration-150 ease hover:cursor-pointer",
                       isActive
                         ? "text-primary"
                         : "text-muted-foreground hover:text-foreground",
@@ -485,7 +485,7 @@ export default function Hero() {
                                 type="button"
                                 onClick={() => setActiveRange(r)}
                                 className={cn(
-                                  "relative px-2 py-0.5 text-xs font-mono transition-colors duration-150 ease hover:cursor-pointer",
+                                  "relative px-2 py-0.5 text-xs font-mono transition-[background-color,color] duration-150 ease hover:cursor-pointer",
                                   isActive
                                     ? "text-primary"
                                     : "text-muted-foreground hover:text-foreground",
@@ -563,7 +563,7 @@ export default function Hero() {
                       {assets.map((asset) => (
                         <div
                           key={asset.symbol}
-                          className="flex items-center justify-between px-5 py-3 hover:bg-muted/60 transition-colors cursor-pointer"
+                          className="flex items-center justify-between px-5 py-3 hover:bg-muted/60 transition-[background-color] cursor-pointer"
                         >
                           <div className="flex items-center gap-3">
                             <AssetIcon
@@ -613,7 +613,7 @@ export default function Hero() {
                       {DEFI_POSITIONS.map((pos) => (
                         <div
                           key={pos.protocol}
-                          className="flex items-center justify-between p-3 rounded-xl border border-border bg-muted/40 hover:border-primary/30 hover:bg-muted/70 transition-colors cursor-pointer"
+                          className="flex items-center justify-between p-3 rounded-xl border border-border bg-muted/40 hover:border-primary/30 hover:bg-muted/70 transition-[background-color,border-color] cursor-pointer"
                         >
                           <div className="flex items-center gap-2.5">
                             <div
@@ -662,7 +662,7 @@ export default function Hero() {
                   key={label}
                   type="button"
                   variant="ghost"
-                  className="flex-1 flex-col h-auto gap-1 py-3 rounded-none text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
+                  className="flex-1 flex-col h-auto gap-1 py-3 rounded-none text-muted-foreground transition-[background-color] duration-150 hover:bg-muted hover:text-foreground dark:hover:bg-white/8"
                 >
                   <Icon className="w-4 h-4" />
                   <span className="text-[10px] font-medium">{label}</span>

@@ -26,33 +26,20 @@ const securityPoints = [
 
 export default function Security() {
   return (
-    <section
-      className="relative z-10 py-24 lg:py-32 border-y border-border/40"
-      style={{
-        background:
-          "linear-gradient(180deg, rgba(13,13,26,0.8) 0%, rgba(7,7,15,0.9) 100%)",
-      }}
-    >
+    <section className="relative z-10 py-24 lg:py-32 border-y border-border/40 bg-muted/40 dark:bg-gradient-to-b dark:from-card/80 dark:to-background/90">
       <div className="max-w-7xl mx-auto px-5">
         <div className="grid lg:grid-cols-[1fr_1fr] gap-16 items-center">
           <div>
-            <div
-              className="inline-block text-xs font-mono font-semibold uppercase tracking-widest mb-4 px-3 py-1.5 rounded-full border"
-              style={{
-                color: "#10b981",
-                borderColor: "rgba(16,185,129,0.3)",
-                background: "rgba(16,185,129,0.08)",
-              }}
-            >
+            <div className="inline-block text-xs font-mono font-semibold uppercase tracking-widest mb-4 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/8 text-emerald-700 dark:text-emerald-400">
               Security-first
             </div>
             <h2
-              className="text-4xl lg:text-5xl font-black tracking-tight mb-5"
+              className="text-4xl lg:text-5xl font-black tracking-tight mb-5 text-foreground"
               style={{ fontFamily: "'Outfit', sans-serif" }}
             >
               Your assets are yours.
               <br />
-              <span style={{ color: "#a78bfa" }}>Always.</span>
+              <span className="text-primary">Always.</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-md">
               WALLET is non-custodial by design. Your private keys are encrypted
@@ -62,7 +49,7 @@ export default function Security() {
             <Button
               type="button"
               variant="outline"
-              className="rounded-xl h-auto px-5 py-3 border-[rgba(139,92,246,0.3)] text-[#a78bfa] hover:border-primary/50 hover:text-foreground bg-transparent"
+              className="rounded-xl h-auto px-5 py-3 border-primary/30 text-primary hover:border-primary/50 hover:text-foreground bg-transparent"
             >
               Read our security whitepaper
               <ExternalLink className="w-3.5 h-3.5" />
@@ -73,22 +60,12 @@ export default function Security() {
             {securityPoints.map(({ icon: Icon, label, desc }) => (
               <div
                 key={label}
-                className="p-5 rounded-2xl border transition-all hover:border-primary/30"
-                style={{
-                  background: "rgba(13,13,26,0.8)",
-                  borderColor: "rgba(139,92,246,0.1)",
-                }}
+                className="p-5 rounded-2xl border border-border bg-card text-card-foreground transition-[border-color] hover:border-primary/30 shadow-sm dark:shadow-none"
               >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                  style={{
-                    background: "rgba(16,185,129,0.1)",
-                    border: "1px solid rgba(16,185,129,0.2)",
-                  }}
-                >
-                  <Icon className="w-4 h-4" style={{ color: "#10b981" }} />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 bg-emerald-500/10 border border-emerald-500/20">
+                  <Icon className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <h4 className="font-bold mb-1.5">{label}</h4>
+                <h4 className="font-bold mb-1.5 text-foreground">{label}</h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   {desc}
                 </p>
