@@ -108,10 +108,10 @@ function MobileNavPanelContent({
               <button
                 type="button"
                 onClick={() => onPush(entry)}
-                className="flex w-full items-center justify-between py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 ease"
+                className="flex w-full items-center justify-between py-2.5 text-sm text-foreground/85 hover:text-foreground transition-colors duration-150 ease"
               >
                 {entry.label}
-                <ChevronRight className="size-4" />
+                <ChevronRight className="size-4 text-muted-foreground" />
               </button>
             </li>
           ) : (
@@ -121,7 +121,7 @@ function MobileNavPanelContent({
             >
               <button
                 type="button"
-                className="w-full py-2.5 text-left text-sm text-muted-foreground hover:text-foreground transition-colors duration-150 ease"
+                className="w-full py-2.5 text-left text-sm text-foreground/85 hover:text-foreground transition-colors duration-150 ease"
               >
                 {entry.label}
               </button>
@@ -252,7 +252,7 @@ function DesktopNav() {
   }, [value, syncViewportToTrigger])
 
   const linkClassName =
-    "rounded-lg px-2 py-1.5 text-muted-foreground hover:bg-primary/10 hover:text-foreground focus:bg-primary/10 focus:text-foreground data-[active=true]:bg-primary/10 data-[active=true]:text-foreground data-[active=true]:hover:bg-primary/10 data-[active=true]:focus:bg-primary/10"
+    "rounded-lg px-2 py-1.5 text-foreground/85 hover:bg-primary/15 hover:text-foreground focus:bg-primary/15 focus:text-foreground data-[active=true]:bg-primary/15 data-[active=true]:text-foreground data-[active=true]:hover:bg-primary/15 data-[active=true]:focus:bg-primary/15"
 
   return (
     <NavigationMenu
@@ -262,6 +262,7 @@ function DesktopNav() {
       className="hidden md:flex"
       delayDuration={120}
       skipDelayDuration={300}
+      viewportClassName="border-border/80 shadow-lg shadow-black/40"
       viewportStyle={{ transform: `translate3d(${viewportX}px, 0, 0)` }}
     >
       <NavigationMenuList>
@@ -273,7 +274,7 @@ function DesktopNav() {
           >
             <NavigationMenuTrigger
               onPointerEnter={() => syncViewportToTrigger(menu.label)}
-              className="h-auto rounded-lg bg-transparent px-3 py-1.5 text-sm font-normal text-muted-foreground shadow-none hover:bg-transparent hover:text-foreground focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-foreground data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent"
+              className="h-auto rounded-lg bg-transparent px-3 py-1.5 text-sm font-normal text-foreground/70 shadow-none hover:bg-transparent hover:text-foreground focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-foreground data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent"
             >
               {menu.label}
             </NavigationMenuTrigger>
@@ -282,7 +283,7 @@ function DesktopNav() {
                 {menu.items?.map((entry) =>
                   entry.items?.length ? (
                     <li key={entry.label} className="grid gap-0.5">
-                      <div className="px-2 pt-1.5 pb-0.5 text-xs font-medium text-muted-foreground">
+                      <div className="px-2 pt-2 pb-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                         {entry.label}
                       </div>
                       {entry.items.map((child) => (
