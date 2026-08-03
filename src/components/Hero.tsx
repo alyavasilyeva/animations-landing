@@ -15,7 +15,7 @@ import {
   Wallet,
 } from "lucide-react"
 import { AnimatePresence, motion, useReducedMotion } from "motion/react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import type { TooltipContentProps } from "recharts"
 import {
   Area,
@@ -191,6 +191,15 @@ export default function Hero() {
   const [hidden, setHidden] = useState(false)
   const [copied, setCopied] = useState(false)
   const [activeTab, setActiveTab] = useState<WalletTab>("portfolio")
+  // Defer CSS entrance until after hydration — SSR HTML would otherwise
+  // start the animation, then React remount restarts it (plays twice).
+  const [enterReady, setEnterReady] = useState(false)
+
+  useEffect(() => {
+    setEnterReady(true)
+  }, [])
+
+  const enterClass = enterReady ? "hero-enter" : "hero-enter-pending"
 
   const indicatorTransition = shouldReduceMotion
     ? { duration: 0 }
@@ -223,7 +232,7 @@ export default function Hero() {
         {/* Left copy */}
         <div className="min-w-0">
           <div
-            className="hero-enter inline-flex max-w-full items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono font-medium mb-6 sm:mb-8 border [--hero-enter-delay:0ms]"
+            className={`${enterClass} inline-flex max-w-full items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono font-medium mb-6 sm:mb-8 border [--hero-enter-delay:0ms]`}
             style={{
               background: "rgba(139,92,246,0.1)",
               borderColor: "rgba(139,92,246,0.3)",
@@ -235,7 +244,7 @@ export default function Hero() {
           </div>
 
           <h1
-            className="hero-enter text-4xl min-[390px]:text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-5 sm:mb-6 [overflow-wrap:normal] [--hero-enter-delay:100ms]"
+            className={`${enterClass} text-4xl min-[390px]:text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-5 sm:mb-6 [overflow-wrap:normal] [--hero-enter-delay:100ms]`}
             style={{ fontFamily: "'Outfit', sans-serif" }}
           >
             Your keys.
@@ -254,13 +263,17 @@ export default function Hero() {
             Your rules.
           </h1>
 
-          <p className="hero-enter text-base sm:text-lg text-muted-foreground leading-relaxed max-w-lg mb-8 sm:mb-10 [--hero-enter-delay:200ms]">
+          <p
+            className={`${enterClass} text-base sm:text-lg text-muted-foreground leading-relaxed max-w-lg mb-8 sm:mb-10 [--hero-enter-delay:200ms]`}
+          >
             WALLET is a non-custodial Web3 wallet built for DeFi power users.
             Swap, bridge, earn, and collect — all from one beautifully designed
             interface.
           </p>
 
-          <div className="hero-enter flex flex-col min-[420px]:flex-row flex-wrap items-stretch min-[420px]:items-center gap-3 sm:gap-4 [--hero-enter-delay:300ms]">
+          <div
+            className={`${enterClass} flex flex-col min-[420px]:flex-row flex-wrap items-stretch min-[420px]:items-center gap-3 sm:gap-4 [--hero-enter-delay:300ms]`}
+          >
             <Button
               type="button"
               size="lg"
@@ -284,7 +297,9 @@ export default function Hero() {
             </Button>
           </div>
 
-          <div className="hero-enter mt-8 sm:mt-10 flex flex-col gap-3 min-[480px]:flex-row min-[480px]:flex-wrap min-[480px]:items-center min-[480px]:gap-x-5 min-[480px]:gap-y-3 [--hero-enter-delay:400ms]">
+          <div
+            className={`${enterClass} mt-8 sm:mt-10 flex flex-col gap-3 min-[480px]:flex-row min-[480px]:flex-wrap min-[480px]:items-center min-[480px]:gap-x-5 min-[480px]:gap-y-3 [--hero-enter-delay:400ms]`}
+          >
             <div className="flex items-center gap-3 min-w-0">
               <div className="flex shrink-0 -space-x-2">
                 {avatarColors.map((avatar) => (
