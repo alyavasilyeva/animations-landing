@@ -9,7 +9,7 @@ export const Route = createFileRoute("/")({ component: App })
 
 function App() {
   return (
-    <main className="pb-8 pt-14">
+    <main>
       <Hero />
       <StatsBar />
       <Features />

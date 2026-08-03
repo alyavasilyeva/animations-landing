@@ -798,12 +798,34 @@ a {
   }
 }
 
-/* Vaul does not handle reduced motion itself; snap the drawer open/closed */
+.hero-enter {
+  animation: hero-enter 650ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  animation-delay: var(--hero-enter-delay, 0ms);
+}
+
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rise-in {
     animation: rise-in-fade 200ms ease both;
   }
 
+  .hero-enter {
+    animation-name: rise-in-fade;
+    animation-duration: 320ms;
+    animation-timing-function: ease;
+  }
+
+  /* Vaul does not handle reduced motion itself; snap the drawer open/closed */
   [data-vaul-drawer],
   [data-vaul-overlay] {
     transition: none;
