@@ -230,7 +230,7 @@ export default function Hero() {
               color: "#a78bfa",
             }}
           >
-            <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-green-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-green-400 animate-pulse motion-reduce:animate-none" />
             <span className="truncate">Now supporting 40+ networks</span>
           </div>
 
@@ -264,7 +264,7 @@ export default function Hero() {
             <Button
               type="button"
               size="lg"
-              className="w-full min-[420px]:w-auto justify-center rounded-xl font-semibold text-white transition-[opacity,transform] duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-lg h-auto px-6 py-3.5"
+              className="w-full min-[420px]:w-auto justify-center rounded-xl font-semibold text-white transition-[opacity,transform] duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] motion-reduce:transition-[opacity] motion-reduce:hover:scale-100 motion-reduce:active:scale-100 shadow-lg h-auto px-6 py-3.5"
               style={{
                 background: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
                 boxShadow: "0 0 40px rgba(139,92,246,0.35)",

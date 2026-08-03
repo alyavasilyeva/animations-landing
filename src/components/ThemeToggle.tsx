@@ -116,7 +116,7 @@ export default function ThemeToggle() {
       title={label}
       variant="outline"
       size="icon-sm"
-      className="rounded-xl text-muted-foreground hover:text-foreground hover:scale-[1.02] active:scale-[0.98]"
+      className="rounded-xl text-muted-foreground hover:text-foreground hover:scale-[1.02] active:scale-[0.98] motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
     >
       <Icon className="size-5" />
       <span className="sr-only">{label}</span>

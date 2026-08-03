@@ -203,7 +203,7 @@ function MobileNav() {
               exit="exit"
               transition={
                 shouldReduceMotion
-                  ? { duration: 0 }
+                  ? { opacity: { duration: 0.15, ease: "easeOut" } }
                   : {
                       transform: { duration: panelDuration, ease: panelEase },
                       opacity: { duration: panelDuration, ease: "easeOut" },

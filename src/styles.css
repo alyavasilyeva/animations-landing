@@ -787,10 +787,19 @@ a {
   }
 }
 
+@keyframes rise-in-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Vaul does not handle reduced motion itself; snap the drawer open/closed */
 @media (prefers-reduced-motion: reduce) {
   .rise-in {
-    animation: none;
+    animation: rise-in-fade 200ms ease both;
   }
 
   [data-vaul-drawer],

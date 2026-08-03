@@ -1,6 +1,7 @@
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
+import { MotionConfig } from "motion/react"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
 import { QueryProvider } from "../components/QueryProvider"
@@ -42,9 +43,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="font-sans antialiased [overflow-wrap:anywhere]">
         <QueryProvider>
-          <Header />
-          {children}
-          <Footer />
+          <MotionConfig reducedMotion="user">
+            <Header />
+            {children}
+            <Footer />
+          </MotionConfig>
         </QueryProvider>
         <TanStackDevtools
           config={{

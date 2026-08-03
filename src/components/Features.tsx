@@ -98,7 +98,7 @@ export default function Features() {
 
               <div className="relative flex items-center gap-1 mt-5 text-xs font-semibold text-primary">
                 Learn more{" "}
-                <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight className="w-3.5 h-3.5 motion-safe:transition-transform motion-safe:group-hover:translate-x-0.5" />
               </div>
             </div>
           ),
