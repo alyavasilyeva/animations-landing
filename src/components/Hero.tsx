@@ -373,11 +373,36 @@ export default function Hero() {
                     onClick={handleCopy}
                   >
                     {address}
-                    {copied ? (
-                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                    ) : (
-                      <Copy className="w-3 h-3" />
-                    )}
+                    <span className="relative inline-flex size-3 items-center justify-center">
+                      <AnimatePresence mode="wait" initial={false}>
+                        <motion.span
+                          key={copied ? "check" : "copy"}
+                          className="absolute inset-0 flex items-center justify-center"
+                          initial={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, scale: 0.85 }
+                          }
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, scale: 0.85 }
+                          }
+                          transition={
+                            shouldReduceMotion
+                              ? { duration: 0.12, ease: "easeOut" }
+                              : { duration: 0.15, ease: EASE_OUT_EXPO }
+                          }
+                        >
+                          {copied ? (
+                            <CheckCircle2 className="size-3 text-emerald-500" />
+                          ) : (
+                            <Copy className="size-3" />
+                          )}
+                        </motion.span>
+                      </AnimatePresence>
+                    </span>
                   </Button>
                 </div>
               </div>
@@ -424,15 +449,29 @@ export default function Hero() {
                   )}
                 </Button>
               </div>
-              <div className="flex items-end gap-3 mb-2">
-                <span
-                  className="text-4xl font-black leading-none text-foreground"
-                  style={{ fontFamily: "'Outfit', sans-serif" }}
-                >
-                  {hidden
-                    ? "••••••"
-                    : `$${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-                </span>
+              <div className="relative mb-2 min-h-[2.5rem]">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={hidden ? "hidden" : "shown"}
+                    className="absolute left-0 top-0 text-4xl font-black leading-none text-foreground"
+                    style={{ fontFamily: "'Outfit', sans-serif" }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={
+                      shouldReduceMotion
+                        ? { duration: 0.1, ease: "easeOut" }
+                        : { duration: 0.15, ease: EASE_OUT_EXPO }
+                    }
+                  >
+                    {hidden
+                      ? "••••••"
+                      : `$${totalValue.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}`}
+                  </motion.span>
+                </AnimatePresence>
               </div>
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
                 <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono font-semibold whitespace-nowrap bg-emerald-500/12 text-emerald-600 dark:text-emerald-400">
