@@ -798,6 +798,10 @@ a {
   }
 }
 
+.hero-enter-pending {
+  opacity: 0;
+}
+
 .hero-enter {
   animation: hero-enter 650ms cubic-bezier(0.19, 1, 0.22, 1) both;
   animation-delay: var(--hero-enter-delay, 0ms);
