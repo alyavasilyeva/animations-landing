@@ -205,9 +205,16 @@ export default function Hero() {
     ? { duration: 0 }
     : { type: "spring" as const, duration: 0.35, bounce: 0 }
 
-  const panelTransition = shouldReduceMotion
+  const panelEnterTransition = shouldReduceMotion
     ? { duration: 0.12, ease: "easeOut" as const }
-    : { duration: 0.22, ease: EASE_OUT_EXPO }
+    : {
+        opacity: { duration: 0.18, ease: EASE_OUT_EXPO },
+        transform: { duration: 0.22, ease: EASE_OUT_EXPO },
+      }
+
+  const panelExitTransition = shouldReduceMotion
+    ? { duration: 0.1, ease: "easeOut" as const }
+    : { duration: 0.15, ease: EASE_OUT_EXPO }
 
   function handleCopy() {
     setCopied(true)
@@ -480,13 +487,25 @@ export default function Hero() {
                   key={activeTab}
                   role="tabpanel"
                   initial={
-                    shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }
+                    shouldReduceMotion
+                      ? { opacity: 0 }
+                      : { opacity: 0, transform: "translate3d(0, 8px, 0)" }
                   }
-                  animate={{ opacity: 1, y: 0 }}
+                  animate={
+                    shouldReduceMotion
+                      ? { opacity: 1 }
+                      : { opacity: 1, transform: "translate3d(0, 0, 0)" }
+                  }
                   exit={
-                    shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }
+                    shouldReduceMotion
+                      ? { opacity: 0, transition: panelExitTransition }
+                      : {
+                          opacity: 0,
+                          transform: "translate3d(0, 8px, 0)",
+                          transition: panelExitTransition,
+                        }
                   }
-                  transition={panelTransition}
+                  transition={panelEnterTransition}
                 >
                   {activeTab === "portfolio" ? (
                     <div className="px-5 pt-4 pb-2">
