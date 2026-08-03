@@ -264,7 +264,7 @@ export default function Hero() {
             <Button
               type="button"
               size="lg"
-              className="w-full min-[420px]:w-auto justify-center rounded-xl font-semibold text-white transition-[opacity,transform] duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] motion-reduce:transition-[opacity] motion-reduce:hover:scale-100 motion-reduce:active:scale-100 shadow-lg h-auto px-6 py-3.5"
+              className="w-full min-[420px]:w-auto justify-center rounded-xl font-semibold text-white transition-[opacity,transform] duration-150 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:opacity-90 [@media(hover:hover)]:hover:scale-[1.02] active:scale-[0.97] motion-reduce:transition-[opacity] motion-reduce:hover:scale-100 motion-reduce:active:scale-100 shadow-lg h-auto px-6 py-3.5"
               style={{
                 background: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
                 boxShadow: "0 0 40px rgba(139,92,246,0.35)",
@@ -277,10 +277,10 @@ export default function Hero() {
               type="button"
               variant="outline"
               size="lg"
-              className="w-full min-[420px]:w-auto justify-center rounded-xl font-semibold text-foreground/80 border-border bg-card/60 hover:border-primary/40 hover:text-foreground hover:bg-card h-auto px-6 py-3.5"
+              className="group w-full min-[420px]:w-auto justify-center rounded-xl font-semibold text-foreground/80 border-border bg-card/60 hover:border-primary/40 hover:text-foreground hover:bg-card h-auto px-6 py-3.5 transition-[opacity,transform,border-color,background-color,color] duration-150 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] [@media(hover:hover)]:hover:scale-[1.02] active:scale-[0.97] motion-reduce:transition-[opacity,border-color,background-color,color] motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
             >
               Watch demo
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 motion-safe:transition-transform motion-safe:duration-150 motion-safe:ease-[cubic-bezier(0.19,1,0.22,1)] motion-safe:group-hover:translate-x-0.5" />
             </Button>
           </div>
 
