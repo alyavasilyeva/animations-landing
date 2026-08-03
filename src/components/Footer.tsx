@@ -39,7 +39,7 @@ export default function Footer() {
           </nav>
 
           <div className="text-xs text-muted-foreground font-mono shrink-0 text-center lg:text-right">
-            © 2025 Nova Labs, Inc.
+            © {new Date().getFullYear()} Wallet, Inc.
           </div>
         </div>
       </div>
