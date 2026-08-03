@@ -27,7 +27,7 @@ const securityPoints = [
 export default function Security() {
   return (
     <section className="relative z-10 py-24 lg:py-32 border-y border-border/40 bg-muted/40 dark:bg-gradient-to-b dark:from-card/80 dark:to-background/90">
-      <div className="max-w-7xl mx-auto px-5">
+      <div className="max-w-6xl mx-auto px-5">
         <div className="grid lg:grid-cols-[1fr_1fr] gap-16 items-center">
           <div>
             <div className="inline-block text-xs font-mono font-semibold uppercase tracking-widest mb-4 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/8 text-emerald-700 dark:text-emerald-400">

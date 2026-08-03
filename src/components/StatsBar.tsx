@@ -8,7 +8,7 @@ const stats = [
 export default function StatsBar() {
   return (
     <section className="relative z-10 border-y border-border/40 bg-muted/50 dark:bg-card/60">
-      <div className="max-w-7xl mx-auto px-5 py-8">
+      <div className="max-w-6xl mx-auto px-5 py-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map(({ value, label }) => (
             <div key={label} className="text-center">

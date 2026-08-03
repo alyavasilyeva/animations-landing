@@ -15,7 +15,7 @@ const chains = [
 
 export default function SupportedChains() {
   return (
-    <section className="relative z-10 max-w-7xl mx-auto px-5 py-24 lg:py-28">
+    <section className="relative z-10 max-w-6xl mx-auto px-5 py-24 lg:py-28">
       <div className="text-center mb-12">
         <h2
           className="text-3xl lg:text-4xl font-black tracking-tight mb-3 text-foreground"

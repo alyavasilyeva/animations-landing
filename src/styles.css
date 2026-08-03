@@ -466,8 +466,10 @@ pre code {
 }
 
 .page-wrap {
-  width: min(1080px, calc(100% - 2rem));
+  width: 100%;
+  max-width: 72rem; /* matches max-w-6xl / header & footer */
   margin-inline: auto;
+  padding-inline: 1.25rem; /* matches px-5 */
 }
 
 .display-title {

@@ -269,7 +269,7 @@ function DesktopNav() {
       ref={rootRef}
       value={value}
       onValueChange={handleValueChange}
-      className="hidden md:flex"
+      className="hidden lg:flex"
       delayDuration={120}
       skipDelayDuration={300}
       viewportClassName="border-border/80 shadow-lg shadow-black/40"
@@ -344,7 +344,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 768px)")
+    const media = window.matchMedia("(min-width: 1024px)")
     const onChange = () => {
       if (media.matches) {
         setMobileMenuOpen(false)
@@ -359,7 +359,7 @@ export default function Header() {
 
   return (
     <header className="relative z-50 border-b border-border/50 backdrop-blur-xl bg-background/80 sticky top-0">
-      <div className="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
         <div className="flex items-center gap-2.5 flex-shrink-0">
           <div
@@ -374,10 +374,10 @@ export default function Header() {
           </span>
         </div>
 
-        {/* Desktop nav */}
+        {/* Desktop nav — lg+ so iPad portrait keeps the drawer */}
         <DesktopNav />
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3 shrink-0">
           <ThemeToggle />
           <Button
             type="button"
@@ -395,7 +395,7 @@ export default function Header() {
           </Button>
         </div>
 
-        <div className="md:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-2 shrink-0">
           <ThemeToggle />
           <Drawer.Root open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <Drawer.Trigger asChild>
@@ -414,9 +414,9 @@ export default function Header() {
               </Button>
             </Drawer.Trigger>
             <Drawer.Portal>
-              <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40 md:hidden" />
+              <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40 lg:hidden" />
               <Drawer.Content
-                className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border-t border-border/50 bg-card outline-none md:hidden"
+                className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border-t border-border/50 bg-card outline-none lg:hidden"
                 aria-describedby={undefined}
               >
                 <div

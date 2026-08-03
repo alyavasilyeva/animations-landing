@@ -218,7 +218,7 @@ export default function Hero() {
           : portfolioHistory.slice(-6)
 
   return (
-    <section className="relative z-10 w-full max-w-7xl mx-auto px-0 sm:px-5 pt-16 pb-16 sm:pt-20 sm:pb-24 lg:pt-28 lg:pb-32">
+    <section className="relative z-10 w-full max-w-6xl mx-auto px-5 pt-16 pb-16 sm:pt-20 sm:pb-24 lg:pt-28 lg:pb-32">
       <div className="grid lg:grid-cols-[1fr_min(100%,480px)] gap-10 sm:gap-12 xl:gap-20 items-center">
         {/* Left copy */}
         <div className="min-w-0">

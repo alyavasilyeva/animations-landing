@@ -43,7 +43,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="relative z-10 max-w-7xl mx-auto px-5 py-24 lg:py-32">
+    <section className="relative z-10 max-w-6xl mx-auto px-5 py-24 lg:py-32">
       <div className="text-center mb-16">
         <div className="inline-block text-xs font-mono font-semibold uppercase tracking-widest mb-4 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/8 text-primary">
           Everything in one wallet
