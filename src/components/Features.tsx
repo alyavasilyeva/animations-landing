@@ -65,9 +65,9 @@ export default function Features() {
           ({ icon: Icon, title, label, desc, stat, statLabel }) => (
             <div
               key={title}
-              className="group relative rounded-2xl p-6 border border-border bg-card text-card-foreground hover:border-primary/40 transition-[border-color] duration-300 cursor-pointer overflow-hidden shadow-sm dark:shadow-none"
+              className="group relative rounded-2xl p-6 border border-border bg-card text-card-foreground hover:border-primary/40 transition-[border-color,transform] duration-150 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] cursor-pointer overflow-hidden shadow-sm dark:shadow-none active:scale-[0.97] motion-reduce:transition-[border-color] motion-reduce:active:scale-100"
             >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-[radial-gradient(circle_at_30%_50%,color-mix(in_oklab,var(--primary)_8%,transparent),transparent_70%)]" />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease pointer-events-none bg-[radial-gradient(circle_at_30%_50%,color-mix(in_oklab,var(--primary)_8%,transparent),transparent_70%)]" />
 
               <div className="relative flex items-start justify-between mb-5">
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-primary/12 border border-primary/20">
@@ -98,7 +98,7 @@ export default function Features() {
 
               <div className="relative flex items-center gap-1 mt-5 text-xs font-semibold text-primary">
                 Learn more{" "}
-                <ChevronRight className="w-3.5 h-3.5 motion-safe:transition-transform motion-safe:group-hover:translate-x-0.5" />
+                <ChevronRight className="w-3.5 h-3.5 motion-safe:transition-transform motion-safe:duration-150 motion-safe:ease-[cubic-bezier(0.19,1,0.22,1)] motion-safe:group-hover:translate-x-0.5" />
               </div>
             </div>
           ),
