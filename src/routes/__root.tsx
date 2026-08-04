@@ -5,6 +5,7 @@ import { MotionConfig } from "motion/react"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
 import { QueryProvider } from "../components/QueryProvider"
+import WelcomePopup from "../components/WelcomePopup"
 
 import appCss from "../styles.css?url"
 
@@ -47,6 +48,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <Header />
             {children}
             <Footer />
+            <WelcomePopup />
           </MotionConfig>
         </QueryProvider>
         <TanStackDevtools
