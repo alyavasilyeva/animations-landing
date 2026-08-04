@@ -84,9 +84,9 @@ function readDocumentTheme(): ThemeMode | null {
 }
 
 export default function ThemeToggle() {
-  const [mode, setMode] = useState<ThemeMode>(
-    () => readDocumentTheme() ?? "light",
-  )
+  // Must match SSR: never read document/localStorage during the initial
+  // render or hydration will mismatch (Sun vs Moon) for dark-mode users.
+  const [mode, setMode] = useState<ThemeMode>("light")
 
   useEffect(() => {
     const initialMode = readDocumentTheme() ?? getInitialMode()
