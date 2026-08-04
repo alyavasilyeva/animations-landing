@@ -22,7 +22,8 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: "Animation tests playground",
+        content: "This is a playground for testing CSS and motion animations.",
       },
     ],
     links: [
