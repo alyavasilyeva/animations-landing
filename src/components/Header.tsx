@@ -369,7 +369,7 @@ export default function Header() {
             <Wallet className="w-4 h-4 text-white" />
           </div>
           <span className="text-lg font-bold tracking-tight">
-            WALLET
+            WALLET123
             <span style={{ color: "#8b5cf6" }}>.</span>
           </span>
         </div>
